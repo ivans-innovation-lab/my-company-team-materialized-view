@@ -1,0 +1,66 @@
+defaults: &defaults
+  working_directory: /home/circleci/my-company-materialized-view
+  docker:
+    - image: circleci/openjdk:8-jdk-browsers
+    
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+
+      - checkout
+
+      - restore_cache:
+          key: my-company-materialized-view-{{ checksum "pom.xml" }}
+
+      - run: 
+          name: Install maven artifact
+          command: |
+            if [ "${CIRCLE_BRANCH}" != "master" ]; then
+              mvn -s .circleci/maven.settings.xml install -P idugalic-cloud
+            fi
+            
+      - deploy:
+          name: Deploy maven artifact
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              mvn -s .circleci/maven.settings.xml deploy -P idugalic-cloud
+            fi
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: my-company-materialized-view-{{ checksum "pom.xml" }}
+      
+      - run:
+          name: Collecting test results
+          command: |
+            mkdir -p junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} junit/ \;
+          when: always
+          
+      - store_test_results:
+          path: junit/
+          
+      - store_artifacts:
+          path: junit/
+          
+      - run:
+          name: Collecting artifacts
+          command: |
+            mkdir -p artifacts/
+            find . -type f -regex ".*/target/.*jar" -exec cp {} artifacts/ \;
+     
+      - store_artifacts:
+          path: artifacts/
+
+notify:
+  webhooks:
+    - url: https://webhook.atomist.com/atomist/circle
+ 
+workflows:
+  version: 2
+  my-company-materialized-view-workflow:
+    jobs:
+      - build
