@@ -13,6 +13,7 @@ This project is driven using [Maven][mvn].
 Make sure that you have this libraries installed in your local maven repository:
 
  - [my-company-common](https://github.com/ivans-innovation-lab/my-company-common)
+ - [my-company-project-materialized-view](https://github.com/ivans-innovation-lab/my-company-project-materialized-view)
 
 ```bash
 $ ./mvnw clean install
