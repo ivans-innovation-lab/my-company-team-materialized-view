@@ -5,8 +5,8 @@
 	<artifactId>my-company-team-materialized-view</artifactId>
 	<packaging>jar</packaging>
 	<name>my-company-team-materialized-view</name>
-	<description>my new project</description>
-	<version>0.1.0-SNAPSHOT</version>
+	<description>Team - Query Side - Materialized View</description>
+	<version>1.0.0</version>
 
 	<parent>
 		<groupId>com.idugalic</groupId>
@@ -17,14 +17,15 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.idugalic</groupId>
-			<artifactId>my-company-common-blog</artifactId>
+			<artifactId>my-company-common-team</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.idugalic</groupId>
-			<artifactId>my-company-common-project</artifactId>
+			<artifactId>my-company-project-materialized-view</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.axonframework</groupId>
 			<artifactId>axon-spring-boot-starter</artifactId>
