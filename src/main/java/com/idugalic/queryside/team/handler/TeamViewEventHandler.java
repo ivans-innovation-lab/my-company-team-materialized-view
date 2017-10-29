@@ -91,7 +91,7 @@ public class TeamViewEventHandler {
     	 Team team = myAggregateRepository.findOne(event.getId());
     	 
     	 com.idugalic.queryside.team.domain.Member newMember = new com.idugalic.queryside.team.domain.Member();
-    	 newMember.setId(event.getMemberId());
+    	 newMember.setId(Integer.valueOf(event.getMemberId()));
     	 
     	 team.getMembers().remove(newMember);
     	 team.setAggregateVersion(version);
