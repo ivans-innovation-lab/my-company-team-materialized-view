@@ -12,7 +12,7 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: my-company-materialized-view-{{ checksum "pom.xml" }}
+          key: my-company-team-materialized-view0-{{ checksum "pom.xml" }}
 
       - run: 
           name: Install maven artifact
@@ -31,7 +31,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-          key: my-company-materialized-view-{{ checksum "pom.xml" }}
+          key: my-company-team-materialized-view0-{{ checksum "pom.xml" }}
       
       - run:
           name: Collecting test results

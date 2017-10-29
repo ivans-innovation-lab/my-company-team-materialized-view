@@ -9,7 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.idugalic.common.team.event.AssignProjectToTeamSucceededEvent;
+import com.idugalic.common.team.event.MemberAddedToTeamEvent;
+import com.idugalic.common.team.event.MemberRemovedFromTeamEvent;
+import com.idugalic.common.team.event.TeamActivatedEvent;
 import com.idugalic.common.team.event.TeamCreatedEvent;
+import com.idugalic.common.team.event.TeamPassivatedEvent;
+import com.idugalic.common.team.model.Member;
+import com.idugalic.common.team.model.TeamStatus;
 import com.idugalic.queryside.project.repository.ProjectRepository;
 import com.idugalic.queryside.team.domain.Team;
 import com.idugalic.queryside.team.repository.TeamRepository;
@@ -41,5 +47,55 @@ public class TeamViewEventHandler {
     	 LOG.info("AssignProjectToTeamSucceededEvent: [{}] ", event.getId());
     	 Team team = myAggregateRepository.findOne(event.getId());
     	 team.setProject(projectRepository.findOne(event.getProjectId()));
+    	 team.setAggregateVersion(version);
     }
+    
+    @EventHandler
+    public void handle(TeamActivatedEvent event, @SequenceNumber Long version){
+    	 LOG.info("TeamActivatedEvent: [{}] ", event.getId());
+    	 Team team = myAggregateRepository.findOne(event.getId());
+    	 team.setStatus(TeamStatus.ACTIVE);
+    	 team.setAggregateVersion(version);
+    	 myAggregateRepository.save(team);
+    }
+    
+    @EventHandler
+    public void handle(TeamPassivatedEvent event, @SequenceNumber Long version){
+    	 LOG.info("TeamPassivatedEvent: [{}] ", event.getId());
+    	 Team team = myAggregateRepository.findOne(event.getId());
+    	 team.setStatus(TeamStatus.PASSIVE);
+    	 team.setAggregateVersion(version);
+    	 myAggregateRepository.save(team);
+    }
+    
+    @EventHandler
+    public void handle(MemberAddedToTeamEvent event, @SequenceNumber Long version){
+    	 LOG.info("MemberAddedToTeamEvent: [{}] ", event.getId());
+    	 Team team = myAggregateRepository.findOne(event.getId());
+    	 
+    	 com.idugalic.queryside.team.domain.Member newMember = new com.idugalic.queryside.team.domain.Member();
+    	 newMember.setEndDate(event.getMember().getEndDate());
+    	 newMember.setStartDate(event.getMember().getStartDate());
+    	 newMember.setTeam(team);
+    	 newMember.setUserId(event.getMember().getUserId());
+    	 newMember.setWeeklyHours(event.getMember().getWeeklyHours());
+    	 
+    	 team.getMembers().add(newMember);
+    	 team.setAggregateVersion(version);
+    	 myAggregateRepository.save(team);
+    }
+    
+    @EventHandler
+    public void handle(MemberRemovedFromTeamEvent event, @SequenceNumber Long version){
+    	 LOG.info("MemberRemovedFromTeamEvent: [{}] ", event.getId());
+    	 Team team = myAggregateRepository.findOne(event.getId());
+    	 
+    	 com.idugalic.queryside.team.domain.Member newMember = new com.idugalic.queryside.team.domain.Member();
+    	 newMember.setId(event.getMemberId());
+    	 
+    	 team.getMembers().remove(newMember);
+    	 team.setAggregateVersion(version);
+    	 myAggregateRepository.save(team);
+    }
+    
 }
