@@ -17,7 +17,6 @@ import com.idugalic.queryside.project.domain.Project;
 
 /**
  * A JPA entity. It represents materialized view of TeamAggregate
- *
  */
 @Entity
 public class Team {

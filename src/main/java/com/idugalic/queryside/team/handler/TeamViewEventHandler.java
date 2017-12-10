@@ -38,13 +38,11 @@ public class TeamViewEventHandler {
 
     @EventHandler
     public void handle(TeamCreatedEvent event, @SequenceNumber Long version) {
-        LOG.info("TeamCreatedEvent: [{}] ", event.getId());
         myAggregateRepository.save(new Team(event, version));
     }
     
     @EventHandler
     public void handle(AssignProjectToTeamSucceededEvent event, @SequenceNumber Long version){
-    	 LOG.info("AssignProjectToTeamSucceededEvent: [{}] ", event.getId());
     	 Team team = myAggregateRepository.findOne(event.getId());
     	 team.setProject(projectRepository.findOne(event.getProjectId()));
     	 team.setAggregateVersion(version);
@@ -52,7 +50,6 @@ public class TeamViewEventHandler {
     
     @EventHandler
     public void handle(TeamActivatedEvent event, @SequenceNumber Long version){
-    	 LOG.info("TeamActivatedEvent: [{}] ", event.getId());
     	 Team team = myAggregateRepository.findOne(event.getId());
     	 team.setStatus(TeamStatus.ACTIVE);
     	 team.setAggregateVersion(version);
@@ -61,7 +58,6 @@ public class TeamViewEventHandler {
     
     @EventHandler
     public void handle(TeamPassivatedEvent event, @SequenceNumber Long version){
-    	 LOG.info("TeamPassivatedEvent: [{}] ", event.getId());
     	 Team team = myAggregateRepository.findOne(event.getId());
     	 team.setStatus(TeamStatus.PASSIVE);
     	 team.setAggregateVersion(version);
@@ -70,7 +66,6 @@ public class TeamViewEventHandler {
     
     @EventHandler
     public void handle(MemberAddedToTeamEvent event, @SequenceNumber Long version){
-    	 LOG.info("MemberAddedToTeamEvent: [{}] ", event.getId());
     	 Team team = myAggregateRepository.findOne(event.getId());
     	 
     	 com.idugalic.queryside.team.domain.Member newMember = new com.idugalic.queryside.team.domain.Member();
@@ -87,7 +82,6 @@ public class TeamViewEventHandler {
     
     @EventHandler
     public void handle(MemberRemovedFromTeamEvent event, @SequenceNumber Long version){
-    	 LOG.info("MemberRemovedFromTeamEvent: [{}] ", event.getId());
     	 Team team = myAggregateRepository.findOne(event.getId());
     	 
     	 com.idugalic.queryside.team.domain.Member newMember = new com.idugalic.queryside.team.domain.Member();
@@ -97,5 +91,4 @@ public class TeamViewEventHandler {
     	 team.setAggregateVersion(version);
     	 myAggregateRepository.save(team);
     }
-    
 }
