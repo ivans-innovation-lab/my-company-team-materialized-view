@@ -83,11 +83,8 @@ public class TeamViewEventHandler {
     @EventHandler
     public void handle(MemberRemovedFromTeamEvent event, @SequenceNumber Long version){
     	 Team team = myAggregateRepository.findOne(event.getId());
-    	 
-    	 com.idugalic.queryside.team.domain.Member newMember = new com.idugalic.queryside.team.domain.Member();
-    	 newMember.setId(Integer.valueOf(event.getMemberId()));
-    	 
-    	 team.getMembers().remove(newMember);
+
+    	 team.getMembers().removeIf(member -> member.getUserId().equals(event.getMemberId()));
     	 team.setAggregateVersion(version);
     	 myAggregateRepository.save(team);
     }
