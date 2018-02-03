@@ -46,6 +46,7 @@ public class TeamViewEventHandler {
     	 Team team = myAggregateRepository.findOne(event.getId());
     	 team.setProject(projectRepository.findOne(event.getProjectId()));
     	 team.setAggregateVersion(version);
+		 myAggregateRepository.save(team);
     }
     
     @EventHandler
