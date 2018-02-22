@@ -14,19 +14,9 @@ jobs:
       - restore_cache:
           key: my-company-team-materialized-view0-{{ checksum "pom.xml" }}
 
-      - run: 
-          name: Install maven artifact
-          command: |
-            if [ "${CIRCLE_BRANCH}" != "master" ]; then
-              mvn -s .circleci/maven.settings.xml install -P idugalic-cloud
-            fi
-            
       - deploy:
           name: Deploy maven artifact
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              mvn -s .circleci/maven.settings.xml deploy -P idugalic-cloud
-            fi
+          command: mvn -s .circleci/maven.settings.xml deploy -P idugalic-cloud
 
       - save_cache:
           paths:

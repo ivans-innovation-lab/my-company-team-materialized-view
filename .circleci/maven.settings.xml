@@ -4,12 +4,12 @@
 	<servers>
 		<server>
 			<id>idugalic-releases</id>
-			<username>admin</username>
+			<username>idugalic</username>
 			<password>${env.MAVEN_PASSWORD}</password>
 		</server>
 		<server>
 			<id>idugalic-snapshots</id>
-			<username>admin</username>
+			<username>idugalic</username>
 			<password>${env.MAVEN_PASSWORD}</password>
 		</server>
 	</servers>
