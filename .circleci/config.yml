@@ -69,7 +69,7 @@ notify:
  
 workflows:
   version: 2
-  my-company-team-domain-workflow:
+  my-company-team-materialized-view-workflow:
     jobs:
       - build
       - deploy:
