@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: /home/circleci/my-company-team-domain
+  working_directory: /home/circleci/my-company-team-materialized-view
   docker:
     - image: circleci/openjdk:8-jdk-browsers
     
