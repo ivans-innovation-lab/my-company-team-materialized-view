@@ -1,5 +1,5 @@
 defaults: &defaults
-  working_directory: /home/circleci/my-company-materialized-view
+  working_directory: /home/circleci/my-company-team-materialized-view
   docker:
     - image: circleci/openjdk:8-jdk-browsers
     
@@ -12,16 +12,16 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: my-company-team-materialized-view0-{{ checksum "pom.xml" }}
+          key: my-company-team-materialized-view-{{ checksum "pom.xml" }}
 
-      - deploy:
-          name: Deploy maven artifact
-          command: mvn -s .circleci/maven.settings.xml deploy -P idugalic-cloud
+      - run: 
+          name: Verify maven application (run any checks on results of integration tests to ensure quality criteria are met)
+          command: mvn -s .circleci/maven.settings.xml verify -P idugalic-cloud
 
       - save_cache:
           paths:
             - ~/.m2
-          key: my-company-team-materialized-view0-{{ checksum "pom.xml" }}
+          key: my-company-team-materialized-view-{{ checksum "pom.xml" }}
       
       - run:
           name: Collecting test results
@@ -35,6 +35,24 @@ jobs:
           
       - store_artifacts:
           path: junit/
+
+  deploy:
+    <<: *defaults
+    steps:
+
+      - checkout
+
+      - restore_cache:
+          key: my-company-team-materialized-view-{{ checksum "pom.xml" }}
+            
+      - deploy:
+          name: Deploy maven artifact
+          command: mvn -s .circleci/maven.settings.xml -DskipTests deploy -P idugalic-cloud
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: my-company-team-materialized-view-{{ checksum "pom.xml" }}
           
       - run:
           name: Collecting artifacts
@@ -51,6 +69,12 @@ notify:
  
 workflows:
   version: 2
-  my-company-materialized-view-workflow:
+  my-company-team-materialized-view-workflow:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

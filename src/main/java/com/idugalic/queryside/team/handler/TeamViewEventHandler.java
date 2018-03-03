@@ -3,8 +3,6 @@ package com.idugalic.queryside.team.handler;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.eventsourcing.SequenceNumber;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +12,6 @@ import com.idugalic.common.team.event.MemberRemovedFromTeamEvent;
 import com.idugalic.common.team.event.TeamActivatedEvent;
 import com.idugalic.common.team.event.TeamCreatedEvent;
 import com.idugalic.common.team.event.TeamPassivatedEvent;
-import com.idugalic.common.team.model.Member;
 import com.idugalic.common.team.model.TeamStatus;
 import com.idugalic.queryside.project.repository.ProjectRepository;
 import com.idugalic.queryside.team.domain.Team;
@@ -27,8 +24,6 @@ import com.idugalic.queryside.team.repository.TeamRepository;
 @ProcessingGroup("default")
 @Component
 public class TeamViewEventHandler {
-
-    private static final Logger LOG = LoggerFactory.getLogger(TeamViewEventHandler.class);
 
     @Autowired
     private TeamRepository myAggregateRepository;
@@ -85,7 +80,7 @@ public class TeamViewEventHandler {
     public void handle(MemberRemovedFromTeamEvent event, @SequenceNumber Long version){
     	 Team team = myAggregateRepository.findById(event.getId()).get();
 
-    	 team.getMembers().removeIf(member -> member.getUserId().equals(event.getMemberId()));
+    	 team.getMembers().removeIf(member -> member.getUserId().equals(event.getMember().getUserId()));
     	 team.setAggregateVersion(version);
     	 myAggregateRepository.save(team);
     }

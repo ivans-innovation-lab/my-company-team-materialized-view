@@ -1,7 +1,7 @@
 package com.idugalic.queryside.team.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,65 +21,64 @@ import com.idugalic.queryside.project.domain.Project;
 @Entity
 public class Team {
 
-    @Id
-    private String id;
-    @Version
-    private Long version;
-    private Long aggregateVersion;
-    private String name;
-    private String description;
-    private TeamStatus status;
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval=true)
-    private List<Member> members = new ArrayList<Member>();
+	@Id
+	private String id;
+	@Version
+	private Long version;
+	private Long aggregateVersion;
+	private String name;
+	private String description;
+	private TeamStatus status;
+	@ManyToOne
+	@JoinColumn(name = "project_id")
+	private Project project;
+	@OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<Member> members = new HashSet<Member>();
 
+	public Team() {
+	}
 
-    public Team() {
-    }
+	public Team(String id, Long aggregateVersion, String name, String description, TeamStatus status) {
+		super();
+		this.id = id;
+		this.aggregateVersion = aggregateVersion;
+		this.name = name;
+		this.description = description;
+		this.status = status;
+	}
 
-    public Team(String id, Long aggregateVersion, String name, String description, TeamStatus status) {
-        super();
-        this.id = id;
-        this.aggregateVersion = aggregateVersion;
-        this.name = name;
-        this.description = description;
-        this.status = status;
-    }
+	public Team(TeamCreatedEvent event, Long aggregateVersion) {
+		super();
+		this.id = event.getId();
+		this.aggregateVersion = aggregateVersion;
+		this.name = event.getName();
+		this.description = event.getDescription();
+		this.status = event.getStatus();
+	}
 
-    public Team(TeamCreatedEvent event, Long aggregateVersion) {
-        super();
-        this.id = event.getId();
-        this.aggregateVersion = aggregateVersion;
-        this.name = event.getName();
-        this.description = event.getDescription();
-        this.status = event.getStatus();
-    }
+	public String getId() {
+		return id;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public Long getVersion() {
+		return aggregateVersion;
+	}
 
-    public Long getVersion() {
-        return aggregateVersion;
-    }
+	public void setVersion(Long version) {
+		this.aggregateVersion = version;
+	}
 
-    public void setVersion(Long version) {
-        this.aggregateVersion = version;
-    }
+	public Long getAggregateVersion() {
+		return aggregateVersion;
+	}
 
-    public Long getAggregateVersion() {
-        return aggregateVersion;
-    }
-
-    public void setAggregateVersion(Long aggregateVersion) {
-        this.aggregateVersion = aggregateVersion;
-    }
+	public void setAggregateVersion(Long aggregateVersion) {
+		this.aggregateVersion = aggregateVersion;
+	}
 
 	public String getName() {
 		return name;
@@ -113,7 +112,7 @@ public class Team {
 		this.project = project;
 	}
 
-	public List<Member> getMembers() {
+	public Set<Member> getMembers() {
 		return members;
 	}
 
