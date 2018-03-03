@@ -38,15 +38,15 @@ public class TeamViewEventHandler {
     
     @EventHandler
     public void handle(AssignProjectToTeamSucceededEvent event, @SequenceNumber Long version){
-    	 Team team = myAggregateRepository.findOne(event.getId());
-    	 team.setProject(projectRepository.findOne(event.getProjectId()));
+    	 Team team = myAggregateRepository.findById(event.getId()).get();
+    	 team.setProject(projectRepository.findById(event.getProjectId()).get());
     	 team.setAggregateVersion(version);
 		 myAggregateRepository.save(team);
     }
     
     @EventHandler
     public void handle(TeamActivatedEvent event, @SequenceNumber Long version){
-    	 Team team = myAggregateRepository.findOne(event.getId());
+    	 Team team = myAggregateRepository.findById(event.getId()).get();
     	 team.setStatus(TeamStatus.ACTIVE);
     	 team.setAggregateVersion(version);
     	 myAggregateRepository.save(team);
@@ -54,7 +54,7 @@ public class TeamViewEventHandler {
     
     @EventHandler
     public void handle(TeamPassivatedEvent event, @SequenceNumber Long version){
-    	 Team team = myAggregateRepository.findOne(event.getId());
+    	 Team team = myAggregateRepository.findById(event.getId()).get();
     	 team.setStatus(TeamStatus.PASSIVE);
     	 team.setAggregateVersion(version);
     	 myAggregateRepository.save(team);
@@ -62,7 +62,7 @@ public class TeamViewEventHandler {
     
     @EventHandler
     public void handle(MemberAddedToTeamEvent event, @SequenceNumber Long version){
-    	 Team team = myAggregateRepository.findOne(event.getId());
+    	 Team team = myAggregateRepository.findById(event.getId()).get();
     	 
     	 com.idugalic.queryside.team.domain.Member newMember = new com.idugalic.queryside.team.domain.Member();
     	 newMember.setEndDate(event.getMember().getEndDate());
@@ -78,7 +78,7 @@ public class TeamViewEventHandler {
     
     @EventHandler
     public void handle(MemberRemovedFromTeamEvent event, @SequenceNumber Long version){
-    	 Team team = myAggregateRepository.findOne(event.getId());
+    	 Team team = myAggregateRepository.findById(event.getId()).get();
 
     	 team.getMembers().removeIf(member -> member.getUserId().equals(event.getMember().getUserId()));
     	 team.setAggregateVersion(version);

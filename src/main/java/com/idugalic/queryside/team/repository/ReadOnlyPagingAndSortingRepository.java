@@ -19,7 +19,7 @@ public interface ReadOnlyPagingAndSortingRepository extends PagingAndSortingRepo
 
     @Override
     @RestResource(exported = false)
-    void delete(String aLong);
+    void deleteById(String aLong);
 
     @Override
     @RestResource(exported = false)
